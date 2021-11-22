@@ -42,9 +42,14 @@ def main(config_file):
 	#Generating images pixel by pixel
 	for i in range(images_size):
 		for j in range(images_size):
-			out = net(sample)
-			probs = F.softmax(out[:,:,i,j], dim=-1).data
-			sample[:,:,i,j] = torch.multinomial(probs, 1).float() / 255.0
+			sample_v = Variable(sample, volatile=True)
+			out = net(sample_v)
+			# probs = F.softmax(out[:,:,i,j], dim=-1).data
+			# sample[:,:,i,j] = torch.multinomial(probs, 1).float() / 255.0
+			print(i, j, "out.shape[1]:", out.shape[1])
+			out_sample = sample_from_discretized_mix_logistic_1d(out, out.shape[1] // 3)
+			sample[:, :, i, j] = out_sample.data[:, :, i, j]
+
 
 	#Saving images row wise
 	torchvision.utils.save_image(sample, 'sample.png', nrow=12, padding=0)

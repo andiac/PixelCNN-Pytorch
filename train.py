@@ -39,14 +39,6 @@ def main(config_file):
 	test = data.DataLoader(train, batch_size=batch_size, shuffle=False, num_workers =1, pin_memory = True)
 
 
-
-
-
-
-
-
-
-
 	#Defining the model and training it on loss function
 	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 	net = PixelCNN().to(device)
@@ -54,13 +46,8 @@ def main(config_file):
   		print("Let's use", torch.cuda.device_count(), "GPUs!")
   		net = nn.DataParallel(net)
 	
-	
-
 	optimizer = optim.Adam(net.parameters())
 	criterion = nn.CrossEntropyLoss()
-
-
-
 
 	loss_overall = []
 	time_start = time.time()
@@ -79,13 +66,13 @@ def main(config_file):
 			images = images.to(device)
 			target = target.to(device)
 			
-			
-
-
 			optimizer.zero_grad()
 
 			output = net(images)
-			loss = criterion(output, target)
+			# loss = criterion(output, target)
+			# print(images.shape)
+			# print(output.shape)
+			loss = discretized_mix_logistic_loss_1d (images, output)
 			loss.backward()
 			optimizer.step()
 
@@ -110,7 +97,7 @@ def main(config_file):
 		print('Checkpoint Saved')
 
 
-	print('Training Finished! Time Taken: ', time.time()-time_start)
+	print('Training Finished! Time Taken: ', time.time() - time_start)
 
 
 if __name__=="__main__":

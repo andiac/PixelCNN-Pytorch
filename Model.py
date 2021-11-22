@@ -51,7 +51,7 @@ class PixelCNN(nn.Module):
 		self.BatchNorm2d_8 = nn.BatchNorm2d(channels)
 		self.ReLU_8= nn.ReLU(True)
 
-		self.out = nn.Conv2d(channels, 256, 1)
+		self.out = nn.Conv2d(channels, 18, 1)
 
 	def forward(self, x):
 		x = self.Conv2d_1(x)

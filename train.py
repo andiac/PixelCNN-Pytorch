@@ -49,7 +49,6 @@ def main(config_file):
 	optimizer = optim.Adam(net.parameters())
 	criterion = nn.CrossEntropyLoss()
 
-	loss_overall = []
 	time_start = time.time()
 	print('Training Started')
 
@@ -58,7 +57,6 @@ def main(config_file):
 		
 		net.train(True)
 		step = 0
-		loss_= 0
 
 		for images, labels in train:
 			
@@ -77,13 +75,10 @@ def main(config_file):
 			optimizer.step()
 
 
-			loss_+=loss
 			step+=1
 
 			if(step%100 == 0):
 				print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'loss: ', loss.item()/1000.0)
-				loss_overall.append(loss_/1000.0)
-				loss_=0
 		print('Epoch: '+str(i)+' Over!')
 
 		#Saving the model

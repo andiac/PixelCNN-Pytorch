@@ -1,6 +1,6 @@
 [model]
 path = Data
-load_path = Models/Model_Checkpoint_Last.pt
+load_path = Models_36/Model_Checkpoint_10.pt
 
 
 [images]

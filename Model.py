@@ -11,7 +11,7 @@ class PixelCNN(nn.Module):
 	"""
 	Network of PixelCNN as described in A Oord et. al. 
 	"""
-	def __init__(self, no_layers=8, kernel = 7, channels=64, device=None):
+	def __init__(self, no_layers=8, kernel = 7, channels=64, in_channels=1, num_out=36, device=None):
 		super(PixelCNN, self).__init__()
 		self.no_layers = no_layers
 		self.kernel = kernel
@@ -19,7 +19,7 @@ class PixelCNN(nn.Module):
 		self.layers = {}
 		self.device = device
 
-		self.Conv2d_1 = MaskedCNN('A',1,channels, kernel, 1, kernel//2, bias=False)
+		self.Conv2d_1 = MaskedCNN('A', in_channels, channels, kernel, 1, kernel//2, bias=False)
 		self.BatchNorm2d_1 = nn.BatchNorm2d(channels)
 		self.ReLU_1= nn.ReLU(True)
 
@@ -51,7 +51,7 @@ class PixelCNN(nn.Module):
 		self.BatchNorm2d_8 = nn.BatchNorm2d(channels)
 		self.ReLU_8= nn.ReLU(True)
 
-		self.out = nn.Conv2d(channels, 18, 1)
+		self.out = nn.Conv2d(channels, num_out, 1)
 
 	def forward(self, x):
 		x = self.Conv2d_1(x)

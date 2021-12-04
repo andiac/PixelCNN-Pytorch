@@ -30,11 +30,15 @@ def main(config_file):
 	channels = network.get('channels', 64) #Depth of the intermediate layers
 	epochs = network.get('epochs', 25) #No of epochs
 	save_path = network.get('save_path', 'Models_36_epochs250') #path where the models are to be saved
+	lr = 1e-4
 
 
 	#Loading Data
 	if (data_name=='MNIST'):
 		train, test = get_MNIST(path)
+
+	N_train = len(train)
+	N_test = len(test)
 
 	train = data.DataLoader(train, batch_size=batch_size, shuffle=True, num_workers =1, pin_memory = True)
 	test = data.DataLoader(test, batch_size=batch_size, shuffle=False, num_workers =1, pin_memory = True)
@@ -47,20 +51,20 @@ def main(config_file):
   		print("Let's use", torch.cuda.device_count(), "GPUs!")
   		net = nn.DataParallel(net)
 	
-	optimizer = optim.Adam(net.parameters())
+	optimizer = optim.Adam(net.parameters(), lr=lr)
 	criterion = nn.CrossEntropyLoss()
 	total_train_loss = []
 	total_test_loss = []
 
 	time_start = time.time()
 	print('Training Started')
+	print(len(train))
 
 	for i in range(epochs):
 
-		
 		net.train(True)
 		step = 0
-		train_loss_cal = 0
+		train_loss_sum = 0.0
 
 		for images, labels in train:
 			
@@ -78,7 +82,7 @@ def main(config_file):
 			loss.backward()
 			optimizer.step()
 
-			train_loss_cal += loss.item()/batch_size
+			train_loss_sum += loss.item()
 
 			step+=1
 
@@ -86,13 +90,14 @@ def main(config_file):
 				# print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'loss: ', loss.item()/1000.0)
 				# print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'loss: ', loss.item()/1000.0)
 		
-		total_train_loss.append( train_loss_cal )
-		print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'train_loss: ', train_loss_cal)
+		train_loss_mean = train_loss_sum / N_train
+		total_train_loss.append(train_loss_mean)
+		print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'train_loss: ', train_loss_mean)
 		# print('Epoch: '+str(i)+' Over!')
 
 
 		net.eval()
-		test_loss = 0.
+		test_loss_sum = 0.
 		for images, labels in test:
 			target = Variable(images[:,0,:,:]*255).long()
 			images = images.to(device)
@@ -100,10 +105,11 @@ def main(config_file):
 
 			output = net(images)
 			loss = discretized_mix_logistic_loss_1d(images, output)
-			test_loss += loss.item()/batch_size
-		total_test_loss.append(test_loss)
+			test_loss_sum += loss.item()
+		test_loss_mean = test_loss_sum / N_test
+		total_test_loss.append(test_loss_mean)
 
-		print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'test_loss: ', test_loss)
+		print('Epoch:'+str(i)+'\t'+ str(step) +'\t Iterations Complete \t'+'test_loss: ', test_loss_mean)
 		print('Epoch: '+str(i)+' Over!')
 
 

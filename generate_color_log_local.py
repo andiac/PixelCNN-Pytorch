@@ -16,7 +16,7 @@ def generate(pt_path, png_path):
     image_channel = 3
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    net = LocalPixelCNN(res_num=5, in_channels=3, num_out=100).to(device)
+    net = LocalPixelCNN(res_num=5, in_channels=3, out_channels=100).to(device)
 
     net.load_state_dict(torch.load(pt_path))
     net.eval()

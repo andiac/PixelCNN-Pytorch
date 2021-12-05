@@ -16,7 +16,7 @@ def generate(pt_path, png_path):
     image_channel = 3
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    net = FullPixelCNN(res_num=5, in_channels=3, num_out=100).to(device)
+    net = FullPixelCNN(res_num=5, in_channels=3, out_channels=100).to(device)
 
     net.load_state_dict(torch.load(pt_path))
     net.eval()
@@ -36,8 +36,8 @@ def generate(pt_path, png_path):
 
 
 if __name__ == '__main__':
-    step = 5
-    for i in tqdm(range(0, 500, step), desc="Generating..."):
+    step = 15
+    for i in tqdm(range(0, 150, step), desc="Generating..."):
         pt_path  = f"./Model/color_log_full/checkpoint_{i}.pt"
         png_path = f"./Samples/color_log_full/checkpoint_{i}.png"
         png_folder = os.path.split(png_path)[0]

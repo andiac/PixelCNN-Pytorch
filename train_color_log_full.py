@@ -1,6 +1,7 @@
 import torch
 from torch import optim
 from torch.utils import data
+from torchvision import datasets, transforms
 
 from utils import *
 from Model import FullPixelCNN
@@ -9,16 +10,26 @@ from myutils import plot_train_val
 if __name__ == '__main__':
     batch_size = 100
     lr         = 3e-4
-    epochs     = 150
-    layers     = 8
-    kernel     = 7
-    channels   = 64
+    epochs     = 1500
     save_path  = "./Model/color_log_full"
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    train, val = get_CIFAR10("./Data")
+    transform_train = transforms.Compose([
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.ToTensor()])
+
+    train = datasets.CIFAR10(root='./Data',
+                             train=True,
+                             download=True,
+                             transform=transform_train)
+
+    val   = datasets.CIFAR10(root='./Data',
+                             train=False,
+                             download=True,
+                             transform=transforms.ToTensor())
+
     N_train = len(train)
     N_val= len(val)
 

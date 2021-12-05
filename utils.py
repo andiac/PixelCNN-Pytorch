@@ -376,18 +376,6 @@ def get_MNIST(path):
     return train_data, test_data
 
 
-def get_CIFAR10(path):
-    assert os.path.exists(path), 'The dataloading path does not exist!'
-    train_data = datasets.CIFAR10(root=path,
-                                  train=True,
-                                  download=True,
-                                  transform=transforms.ToTensor())
-    test_data = datasets.CIFAR10(root=path,
-                                 train=False,
-                                 download=True,
-                                 transform=transforms.ToTensor())
-    return train_data, test_data
-
 def parse_config(filename):
     config = configparser.ConfigParser()
     config.read(filename)

@@ -37,7 +37,7 @@ if __name__ == '__main__':
     val   = data.DataLoader(val,   batch_size=batch_size, shuffle=False, num_workers=1, pin_memory=True)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    net = LocalPixelCNN(res_num=5, in_channels=3, out_channels=100).to(device)
+    net = LocalPixelCNN(res_num=10, in_channels=3, out_channels=100).to(device)
 
     optimizer = optim.Adam(net.parameters(), lr=lr)
 

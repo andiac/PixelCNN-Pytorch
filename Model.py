@@ -12,7 +12,7 @@ class FullPixelCNN(nn.Module):
     """
     Network of PixelCNN as described in A Oord et. al.
     """
-    def __init__(self, res_num=10, in_kernel = 7,  in_channels=3, channels=256, out_channels=256, device=None):
+    def __init__(self, res_num=10, in_kernel=7, in_channels=3, channels=256, out_channels=256, device=None):
         super(FullPixelCNN, self).__init__()
         self.channels = channels
         self.layers = {}
@@ -53,7 +53,7 @@ class LocalPixelCNN(nn.Module):
     """
     Network of PixelCNN as described in A Oord et. al.
     """
-    def __init__(self, res_num=10, in_kernel = 7,  in_channels=3, channels=256, out_channels=256, device=None):
+    def __init__(self, res_num=10, in_kernel=7, in_channels=3, channels=256, out_channels=256, device=None):
         super(LocalPixelCNN, self).__init__()
         self.channels = channels
         self.layers = {}

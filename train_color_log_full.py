@@ -37,7 +37,7 @@ if __name__ == '__main__':
     val   = data.DataLoader(val,   batch_size=batch_size, shuffle=False, num_workers=1, pin_memory=True)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    net = FullPixelCNN(res_num=5, in_channels=3, out_channels=100).to(device)
+    net = FullPixelCNN(res_num=10, in_channels=3, out_channels=100).to(device)
 
     optimizer = optim.Adam(net.parameters(), lr=lr)
 
@@ -60,12 +60,14 @@ if __name__ == '__main__':
 
         net.eval()
         val_loss_sum = 0.0
-        for images, labels in val:
-            images = images.to(device)
-            
-            outputs = net(images)
-            loss = discretized_mix_logistic_loss(images, outputs)
-            val_loss_sum += loss.item()
+
+        with torch.no_grad():
+            for images, labels in val:
+                images = images.to(device)
+                
+                outputs = net(images)
+                loss = discretized_mix_logistic_loss(images, outputs)
+                val_loss_sum += loss.item()
 
         train_loss_mean = train_loss_sum / N_train
         val_loss_mean = val_loss_sum / N_val

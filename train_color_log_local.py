@@ -60,12 +60,14 @@ if __name__ == '__main__':
 
         net.eval()
         val_loss_sum = 0.0
-        for images, labels in val:
-            images = images.to(device)
-            
-            outputs = net(images)
-            loss = discretized_mix_logistic_loss(images, outputs)
-            val_loss_sum += loss.item()
+        
+        with torch.no_grad():
+            for images, labels in val:
+                images = images.to(device)
+                
+                outputs = net(images)
+                loss = discretized_mix_logistic_loss(images, outputs)
+                val_loss_sum += loss.item()
 
         train_loss_mean = train_loss_sum / N_train
         val_loss_mean = val_loss_sum / N_val

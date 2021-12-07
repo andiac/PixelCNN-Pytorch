@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 from Model import FullPixelCNN
 from utils import sample_from_discretized_mix_logistic
+from myutils import rescaling, rescaling_inv
 
 def generate(pt_path, png_path):
     num_images = 144
@@ -32,12 +33,12 @@ def generate(pt_path, png_path):
                 out_sample = sample_from_discretized_mix_logistic(out, out.shape[1] // 10)
                 sample[:, :, i, j] = out_sample.data[:, :, i, j]
 
-    torchvision.utils.save_image(sample, png_path, nrow=12, padding=0)
+    torchvision.utils.save_image(rescaling_inv(sample), png_path, nrow=12, padding=0)
 
 
 if __name__ == '__main__':
-    step = 10
-    for i in tqdm(range(0, 100, step), desc="Generating..."):
+    step = 40
+    for i in tqdm(range(0, 408, step), desc="Generating..."):
         pt_path  = f"./Model/color_log_full/checkpoint_{i}.pt"
         png_path = f"./Samples/color_log_full/checkpoint_{i}.png"
         png_folder = os.path.split(png_path)[0]

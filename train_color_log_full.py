@@ -5,7 +5,7 @@ from torchvision import datasets, transforms
 
 from utils import *
 from Model import FullPixelCNN
-from myutils import plot_train_val
+from myutils import plot_train_val, rescaling, rescaling_inv
 
 if __name__ == '__main__':
     batch_size = 100
@@ -18,7 +18,12 @@ if __name__ == '__main__':
 
     transform_train = transforms.Compose([
         transforms.RandomHorizontalFlip(p=0.5),
-        transforms.ToTensor()])
+        transforms.ToTensor(),
+        rescaling])
+
+    transform_val = transforms.Compose([
+        transforms.ToTensor(),
+        rescaling])
 
     train = datasets.CIFAR10(root='./Data',
                              train=True,
@@ -28,7 +33,7 @@ if __name__ == '__main__':
     val   = datasets.CIFAR10(root='./Data',
                              train=False,
                              download=True,
-                             transform=transforms.ToTensor())
+                             transform=transform_val)
 
     N_train = len(train)
     N_val= len(val)

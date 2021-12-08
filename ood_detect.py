@@ -1,34 +1,40 @@
 import torch
 import torchvision
+from torchvision import transforms
 from torch.utils import data
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
 from Model import FullPixelCNN, LocalPixelCNN
 from utils import discretized_mix_logistic_prob
+from myutils import rescaling
 
-full_model_path  = './Model/color_log_full/checkpoint_68.pt'
-local_model_path = './Model/color_log_local/checkpoint_1.pt'
+full_model_path  = './Model/color_log_full/checkpoint_235.pt'
+local_model_path = './Model/color_log_local/checkpoint_399.pt'
 
 # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda:0")
 
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    rescaling])
+
 cifar_val = torchvision.datasets.CIFAR10('./Data',
                                           train=False, 
                                           download=True, 
-                                          transform=torchvision.transforms.ToTensor())
+                                          transform=transform)
 cifar_loader = data.DataLoader(cifar_val, batch_size=100, shuffle=False, num_workers=1, pin_memory=True)
 
 svhn_val = torchvision.datasets.SVHN('./Data',
                                      split='test',
                                      download=True,
-                                     transform=torchvision.transforms.ToTensor())
+                                     transform=transform)
 svhn_loader = data.DataLoader(svhn_val, batch_size=100, shuffle=False, num_workers=1, pin_memory=True)
 
-full_model  = FullPixelCNN (res_num=5, in_channels=3, out_channels=100).to(device)
-local_model = LocalPixelCNN(res_num=5, in_channels=3, out_channels=100).to(device)
-full_model.load_state_dict(torch.load(full_model_path))
-local_model.load_state_dict(torch.load(local_model_path))
+full_model  = FullPixelCNN (res_num=10, in_channels=3, out_channels=100).to(device)
+local_model = LocalPixelCNN(res_num=10, in_channels=3, out_channels=100).to(device)
+full_model.load_state_dict(torch.load(full_model_path, map_location=device))
+local_model.load_state_dict(torch.load(local_model_path, map_location=device))
 full_model.eval()
 local_model.eval()
 

@@ -12,8 +12,8 @@ from utils import discretized_mix_logistic_prob
 from myutils import rescaling
 from datautils import ScTinyImagenet32
 
-full_model_path  = './Model/color_log_full/checkpoint_235.pt'
-local_model_path = './Model/color_log_local/checkpoint_399.pt'
+full_model_path  = './Model/color_log_full/svhn_global.pt'
+local_model_path = './Model/color_log_local/svhn_local_10rs_ks7.pt'
 
 # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda:0")

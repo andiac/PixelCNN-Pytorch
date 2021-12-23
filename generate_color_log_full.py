@@ -37,8 +37,8 @@ def generate(pt_path, png_path):
 
 
 if __name__ == '__main__':
-    step = 40
-    for i in tqdm(range(0, 201, step), desc="Generating..."):
+    step = 1
+    for i in tqdm(range(759, 760, step), desc="Generating..."):
         pt_path  = f"./Model/color_log_full/checkpoint_{i}.pt"
         png_path = f"./Samples/color_log_full/checkpoint_{i}.png"
         png_folder = os.path.split(png_path)[0]
